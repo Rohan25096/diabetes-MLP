@@ -1,0 +1,13 @@
+[ 2026-05-30 13:21:58,717 ] 25 root - INFO - Logging has started
+[ 2026-05-30 13:21:59,148 ] 161 numexpr.utils - INFO - NumExpr defaulting to 12 threads.
+[ 2026-05-30 13:22:00,943 ] 28 root - INFO - Entered the data injestion method or component
+[ 2026-05-30 13:22:00,947 ] 33 root - INFO - Read the dataset as dataframe.
+[ 2026-05-30 13:22:00,954 ] 39 root - INFO - Train Test split initiated.
+[ 2026-05-30 13:22:00,963 ] 45 root - INFO - Injestion of the data is completed
+[ 2026-05-30 13:22:00,984 ] 66 root - INFO - Read train and test data completed.
+[ 2026-05-30 13:22:00,984 ] 68 root - INFO - Obtaining preprocessing objects
+[ 2026-05-30 13:22:00,991 ] 49 root - INFO - Numerical columns, standard scaling completed.
+[ 2026-05-30 13:22:00,993 ] 89 root - INFO - Applying preprocessing object on training dataframe and testing dataframe.
+[ 2026-05-30 13:22:01,000 ] 96 root - INFO - Saved preprocessing object.
+[ 2026-05-30 13:22:01,003 ] 29 root - INFO - Splitting train and test input data
+[ 2026-05-30 13:22:01,490 ] 62 root - INFO - Best model found on both trainning and test data

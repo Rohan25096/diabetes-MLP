@@ -1,71 +1,44 @@
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import roc_curve
-fpr,tpr,thresholds = roc_curve(y_test,y_log)
+import os
+import sys
 
-import plotly.graph_objects as go
 import numpy as np
+import pandas as pd
+import dill
 
-# Assuming fpr, tpr, and thresholds are defined here
-# For example:
-# fpr, tpr, thresholds = some_function_to_compute_roc()
+from src.exception import CustomException
+from sklearn.metrics import accuracy_score
 
-# Generate a trace for ROC curve
-trace0 = go.Scatter(
-    x=fpr,
-    y=tpr,
-    mode='lines',
-    name='ROC curve'
-)
+def save_object(file_path, obj):
+    try:
+        dir_path = os.path.dirname(file_path)
 
-# Only label every nth point to avoid cluttering
-n = 19
-indices = np.arange(len(thresholds)) % n == 0
+        os.makedirs(dir_path, exist_ok=True)
 
-trace1 = go.Scatter(
-    x=fpr[indices],
-    y=tpr[indices],
-    mode='markers+text',
-    name='Threshold points',
-    text=[f"Thr: {thr:.2f}" for thr in thresholds[indices]],
-    textposition='top center'
-)
+        with open(file_path, "wb") as file_obj:
+            dill.dump(obj, file_obj)
 
-# Diagonal line
-trace2 = go.Scatter(
-    x=[0, 1],
-    y=[0, 1],
-    mode='lines',
-    name='Random (Area = 0.5)'
-)
+    except Exception as e:
+        raise CustomException(e,sys)
+    
+def evaluate_model(X_train,y_train,X_test,y_test,models):
+    try:
+        report={}
 
+        for i in range(len(list(models))):
+            model = list(models.values())[i]
 
-fig = go.Figure()
-fig.add_trace(trace0)
-fig.add_trace(trace1)
-fig.add_trace(trace2)
+            model.fit(X_train,y_train)
 
+            y_train_pred = model.predict(X_train)
+            
+            y_test_pred = model.predict(X_test)
 
-fig.show()
+            train_model_score = accuracy_score(y_train, y_train_pred)
 
-#Setting the optimal threshold.
-optimal_idx = np.argmax(tpr - fpr)
-optimal_threshold = thresholds[optimal_idx]
-print("Optimal Thresholds is: ",optimal_threshold)
+            test_model_score = accuracy_score(y_test, y_test_pred)
 
-#Evaluating the test accuracy.
-y_pred = np.where(y_log>optimal_threshold,1,0)
-acc = accuracy_score(y_test,y_pred)
-print(f"Accuracy: {acc*100:.2f}%")
+            report[list(models.keys())[i]] = test_model_score
 
-#Predicting the loss vs epoch graph.
-plt.plot(history.history['loss'], label='train')
-plt.plot(history.history['val_loss'], label='test')
-plt.title('Model loss')
-plt.legend()
-plt.show()
-
-#Predicting the accuracy vs epoch graph.
-plt.plot(history.history['accuracy'],label='training_acc')
-plt.plot(history.history['val_accuracy'],label='val_acc')
-plt.legend()
-plt.show()
+        return report
+    except Exception as e:
+        raise CustomException(e,sys)
