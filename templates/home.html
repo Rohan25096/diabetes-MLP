@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diabetes Prediction</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 30px;
+        background: #f6f7fb;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      }
+      h1 {
+        margin-top: 0;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #d6d8e3;
+        border-radius: 8px;
+      }
+      .actions {
+        margin-top: 18px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      button {
+        padding: 12px 18px;
+        border: none;
+        border-radius: 10px;
+        background: #2563eb;
+        color: white;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #1d4ed8;
+      }
+      .result {
+        margin-top: 18px;
+        padding: 14px;
+        border-radius: 10px;
+        background: #eef2ff;
+        border: 1px solid #c7d2fe;
+      }
+      .small {
+        color: #6b7280;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Diabetes Prediction</h1>
+      <p class="small">
+        Enter patient details to predict whether diabetes is present.
+      </p>
+
+      <form action="/predictdata" method="POST">
+        <div class="grid">
+          <div>
+            <label for="Pregnancies">Pregnancies</label>
+            <input
+              id="Pregnancies"
+              name="Pregnancies"
+              type="number"
+              step="1"
+              required
+            />
+          </div>
+
+          <div>
+            <label for="Glucose">Glucose</label>
+            <input
+              id="Glucose"
+              name="Glucose"
+              type="number"
+              step="any"
+              required
+            />
+          </div>
+
+          <div>
+            <label for="BloodPressure">BloodPressure</label>
+            <input
+              id="BloodPressure"
+              name="BloodPressure"
+              type="number"
+              step="any"
+              required
+            />
+          </div>
+
+          <div>
+            <label for="SkinThickness">SkinThickness</label>
+            <input
+              id="SkinThickness"
+              name="SkinThickness"
+              type="number"
+              step="any"
+              required
+            />
+          </div>
+
+          <div>
+            <label for="Insulin">Insulin</label>
+            <input
+              id="Insulin"
+              name="Insulin"
+              type="number"
+              step="any"
+              required
+            />
+          </div>
+
+          <div>
+            <label for="BMI">BMI</label>
+            <input id="BMI" name="BMI" type="number" step="any" required />
+          </div>
+
+          <div>
+            <label for="DiabetesPedigreeFunction"
+              >DiabetesPedigreeFunction</label
+            >
+            <input
+              id="DiabetesPedigreeFunction"
+              name="DiabetesPedigreeFunction"
+              type="number"
+              step="any"
+              required
+            />
+          </div>
+
+          <div>
+            <label for="Age">Age</label>
+            <input id="Age" name="Age" type="number" step="any" required />
+          </div>
+        </div>
+
+        <!-- Match predict_pipeline.py CustomData signature (note it expects parameters: BMMI and DiabtesPedigreeFunction due to typos). -->
+        <input type="hidden" name="BMI" value="0" />
+        <input type="hidden" name="DiabetesPedigreeFunction" value="0" />
+
+        <div class="actions">
+          <button type="submit">Predict</button>
+        </div>
+
+        {% if prediction is defined %}
+        <div class="result">
+          <strong>Prediction:</strong>
+          <span>{{ prediction }}</span>
+        </div>
+        {% endif %} {% if probability is defined %}
+        <div class="result" style="margin-top: 10px">
+          <strong>Probability:</strong>
+          <span>{{ probability }}</span>
+        </div>
+        {% endif %}
+      </form>
+
+      <p class="small" style="margin-top: 18px">
+        Note: This form uses the 8 feature columns from
+        <code>artifact/data.csv</code>: Pregnancies, Glucose, BloodPressure,
+        SkinThickness, Insulin, BMI, DiabetesPedigreeFunction, Age.
+      </p>
+    </div>
+  </body>
+</html>
